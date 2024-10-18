@@ -14,7 +14,17 @@
 </head>
 <body>
     <div class="message">
-        <h1>Hello, Nahian from HTML!</h1>
+        <form action="{% url 'show_author_details' %}" method="post">
+            {% csrf_token %}
+            <input type="text"name="author_name" id="author_name">
+            <input type="date" name="author_birth_date"id="author_birth_date">
+            <button type="submit">Save</button>
+        </form>
+        {% for data in author_info %}
+            <p>{{ data.author_name }}</p>
+            <p>{{ data.author_birth_date }}</p>
+        
+        {% endfor %}
     </div>
 </body>
 </html>
