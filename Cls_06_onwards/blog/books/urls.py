@@ -17,5 +17,6 @@ Including another URLconf
 from django.urls import path
 from books import views
 urlpatterns = [
-    path('hello/', views.show_author_details, name='show_author_details'),
+    path('books/show/', views.BookListView.as_view(), name='show book list'),
+    # path('initial_class/', views.MyView.as_view(), name='initial_class'),
 ]
