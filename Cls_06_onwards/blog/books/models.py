@@ -14,6 +14,7 @@ class Author(models.Model):
 class Book(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
+    description = models.TextField(null=True, blank=True)
     publication_date = models.DateField(null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     publisher = models.ForeignKey('Publisher', on_delete=models.CASCADE, null=True, blank=True)

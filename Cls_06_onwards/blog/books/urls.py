@@ -16,7 +16,10 @@ Including another URLconf
 """
 from django.urls import path
 from books import views
+from django.shortcuts import render
 urlpatterns = [
-    path('books/show/', views.BookListView.as_view(), name='show book list'),
-    # path('initial_class/', views.MyView.as_view(), name='initial_class'),
+    path('books/list/', views.BookListView.as_view(), name='show book list'),
+    path('initial_class/', views.MyView.as_view(), name='initial_class'),
+    path('contact/', views.ContactFormView.as_view(), name='contact'),
+    path('contact_success/', lambda request: render(request,'success/contact_success.html'), name='contact_success'),
 ]

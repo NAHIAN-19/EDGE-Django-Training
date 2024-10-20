@@ -24,16 +24,36 @@
     <table>
         <tr>
             <th>Title</th>
+            <th>Description</th>
             <th>Author</th>
             <th>Publication Date</th>
+            <th>Price</th>
         </tr>
-        {% for book in books %}
+        {% if books %}
+            {% for book in books|dictsort:"title" %}
+                <tr>
+                    <td style="font-weight:bold;">
+                        {{ book.title }}
+                    </td>
+                    <td>
+                        {{ book.description|truncatewords:20 }}
+                    </td>
+                    <td>
+                        {{ book.author.name }}
+                    </td>
+                    <td>
+                        {{ book.publication_date|date:'Y-m-d' }}
+                    </td>
+                    <td>
+                        {{ book.price }}
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
             <tr>
-                <td>{{ book.title }}</td>
-                <td>{{ book.author.name }}</td>
-                <td>{{ book.publication_date }}</td>
+                <td colspan="3">No books found</td>
             </tr>
-        {% endfor %}
+        {% endif %}
     </table>
 </body>
 </html>
