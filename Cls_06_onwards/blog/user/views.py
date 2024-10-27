@@ -6,7 +6,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
 class CustomLoginView(LoginView):
     form_class = AuthenticationForm
-    template_name = 'login.html'
+    template_name = 'user/login.html'
     redirect_authenticated_user = True 
     success_url = reverse_lazy('home') 
 
@@ -15,7 +15,7 @@ class CustomLoginView(LoginView):
     
 class SignupView(CreateView):
     form_class = UserCreationForm
-    template_name = 'register.html'
+    template_name = 'user/register.html'
     redirect_authenticated_user = True
     success_url = reverse_lazy('home')
     
