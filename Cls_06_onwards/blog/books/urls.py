@@ -1,25 +1,14 @@
-"""
-URL configuration for blog project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from django.urls import path
 from books import views
+from django.urls import path
 from django.shortcuts import render
+
 urlpatterns = [
-    path('books/list/', views.BookListView.as_view(), name='show book list'),
+    # Initial class based view urls
     path('initial_class/', views.MyView.as_view(), name='initial_class'),
+    # Books related urls
+    path('add/', views.BookAddView.as_view(), name='book_add'),
+    path('list/', views.BookListView.as_view(), name='book_list'),
+    # Contact form related urls
     path('contact/', views.ContactFormView.as_view(), name='contact'),
     path('contact_success/', lambda request: render(request,'success/contact_success.html'), name='contact_success'),
 ]

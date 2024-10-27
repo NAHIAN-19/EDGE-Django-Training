@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'books',
+    'user',
 ]
 
 MIDDLEWARE = [
@@ -122,3 +123,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+LOGIN_URL = 'login'  # URL to redirect to when login is required
+LOGIN_REDIRECT_URL = 'home'  # Default redirect after successful login
+LOGOUT_REDIRECT_URL = 'login'  # Redirect to login page after logout
+SIGNUP_REDIRECT_URL = 'home'  # Redirect to login page after logout

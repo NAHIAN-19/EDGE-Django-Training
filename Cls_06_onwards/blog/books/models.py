@@ -1,5 +1,5 @@
 from django.db import models
-
+from datetime import date
 # One to Many relations with Book
 class Author(models.Model):
     name = models.CharField(max_length=100)
@@ -15,9 +15,16 @@ class Book(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
-    publication_date = models.DateField(null=True, blank=True)
+    publication_date = models.DateField(default=date.today)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     publisher = models.ForeignKey('Publisher', on_delete=models.CASCADE, null=True, blank=True)
+    
+    # Permission required to add new book details
+    class Meta:
+        permissions = [
+            ("can_add_books", "Can add new books"),
+        ]
+        
     def __str__(self):
         return self.title
     
