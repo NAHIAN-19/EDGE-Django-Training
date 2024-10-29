@@ -1,5 +1,6 @@
-from django.db import models
 from datetime import date
+from django.db import models
+from django.core.validators import RegexValidator
 # One to Many relations with Book
 class Author(models.Model):
     name = models.CharField(max_length=100)
@@ -18,7 +19,8 @@ class Book(models.Model):
     publication_date = models.DateField(default=date.today)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     publisher = models.ForeignKey('Publisher', on_delete=models.CASCADE, null=True, blank=True)
-    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     # Permission required to add new book details
     class Meta:
         permissions = [
@@ -35,10 +37,20 @@ class Book(models.Model):
     
 # One to Many relations with Book
 class Publisher(models.Model):
-    name = models.CharField(max_length=100)
-    published_date = models.DateField(null=True, blank=True)
+    name = models.CharField(max_length=100, unique=True, null=False, blank=False)
+    established_date = models.DateField(null=True, blank=True)
     address = models.TextField(null=True, blank=True)
-    phone = models.CharField(max_length=15, null=True, blank=True)
+    phone = models.CharField(
+        max_length=15,
+        null=True,
+        blank=True,
+        validators=[
+            RegexValidator(
+                regex=r'^\+?\d{10,15}$',
+                message="Enter a valid phone number (10-15 digits) with an optional leading '+' sign."
+            )
+        ]
+    )
     def __str__(self):
         return self.name
     

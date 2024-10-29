@@ -9,12 +9,16 @@ from django.http import HttpResponse, HttpResponseForbidden
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, FormView, ListView
+from django.views.decorators.csrf import csrf_exempt
 
 # Rest framework imports
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework.response import Response
-from rest_framework.generics import get_object_or_404
+from rest_framework.generics import GenericAPIView
+from rest_framework.decorators import api_view
+
 
 
 # API Based views
@@ -165,6 +169,85 @@ class APIPublisher(APIView):
         publisher.delete()  # Delete publisher from the database
         return Response(status=status.HTTP_204_NO_CONTENT)  # Return no content response after deletion
 
+# API views using Mixins
+class BookGetUpdateDelete(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, GenericAPIView):
+    queryset = Book.objects.all()  # Retrieve all books
+    serializer_class = BookSerializer  # Serialize book data
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)  # Retrieve book data by primary key
+
+    def put(self, request, *args, **kwargs):  # Update book data by primary key
+        return self.update(request, *args, **kwargs)
+    
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)  # Partial update book data by primary key
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)  # Delete book data by primary key
+
+# Publisher API view using api_view decorator
+class PublisherHandler:
+    @api_view(['GET', 'POST'])
+    @csrf_exempt
+    def publishers_handler(request):
+        # Get method to fetch all publishers data
+        if request.method == 'GET':
+            publishers = Publisher.objects.all()
+            serializer = PublisherSerializer(publishers, many=True)
+            # Return serialized data with Ok status
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        # Post method to add a new publisher
+        elif request.method == 'POST':
+            serializer = PublisherSerializer(data=request.data)
+            # Check if data is valid
+            if serializer.is_valid():
+                serializer.save()
+                # Return created data with Created status
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            # Return validation errors if data is invalid
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    # Get, Put, Patch, Delete methods for single publisher data
+    @csrf_exempt
+    @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+    def publisher_handler(request, pk):
+        try:
+            publisher = Publisher.objects.get(pk=pk)
+        except Publisher.DoesNotExist:
+            return Response({"error": "Publisher not found."}, status=status.HTTP_404_NOT_FOUND)
+        # Get method to fetch single publisher data if id is valid
+        if request.method == 'GET':
+            serializer = PublisherSerializer(publisher)
+            # Return serialized data with Ok status
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        # Put method to update single publisher data if id is valid
+        elif request.method == 'PUT':
+            serializer = PublisherSerializer(publisher, data=request.data)
+            # Check if data is valid
+            if serializer.is_valid():
+                serializer.save()
+                # Return updated data with Ok status
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            # Return validation errors if data is invalid
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # Patch method to partially update single publisher data if id is valid
+        elif request.method == 'PATCH':
+            serializer = PublisherSerializer(publisher, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                # Return updated data with Ok status
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            # Return validation errors if data is invalid
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # Delete method to delete single publisher data if id is valid
+        elif request.method == 'DELETE':
+            publisher.delete()
+            # Return no content response after successful deletion
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        
+# For publisher create api view using @api_view decorator(get, post, put, patch, delete)
+
 # ORM based views
 # Introduction to Class based view
 class MyView(View):
@@ -218,8 +301,9 @@ class BookListView(ListView):
 
 
 
-# python generator, threading, asyn, syn, DRY, WAIT, KISS, 
-# New function before __init__
+# python generator, threading, asyn, syn, DRY, WAIT, KISS, slug, slugify, slugfield, args, kwargs, *args, **kwargs,
+# "New" function before __init__
 # Q, F, Sum, Count, Avg, Prefetch(for many to many), select_related(for one to many)
 # Https status code
 # Html template tags
+# GenericAPIView  -> Pagination

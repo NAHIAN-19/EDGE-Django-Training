@@ -1,7 +1,10 @@
 from books.views import (APIAuthor, APIBook, APIPublisher, BookAddView,
-                        BookListView, ContactFormView, MyView)
+                        BookListView, BookGetUpdateDelete, ContactFormView, MyView, PublisherHandler)
 from django.shortcuts import render
 from django.urls import path
+
+# router
+from rest_framework.routers import DefaultRouter
 
 urlpatterns = [
     # Initial class based view urls
@@ -22,4 +25,11 @@ urlpatterns = [
     path('api/authors/<int:pk>/', APIAuthor.as_view(), name='api_author'), # Author Retrieve, Update and Delete
     path('api/publishers/', APIPublisher.as_view(), name='api_publishers'), # Publisher List and Create
     path('api/publishers/<int:pk>/', APIPublisher.as_view(), name='api_publisher'), # Publisher Retrieve, Update and Delete
+    
+    # Rest api urls using Mixins
+    path('rest/book/<int:pk>/', BookGetUpdateDelete.as_view(), name='rest_books'), # Book List and Create
+    
+    # Rest api urls using Decorators
+    path('rest/publishers/', PublisherHandler.publishers_handler, name='rest_publishers'), # Publishers Data Handler using decorator
+    path('rest/publisher/<int:pk>/', PublisherHandler.publisher_handler, name='rest_publisher'), # Publisher Data Handler using decorator
 ]
