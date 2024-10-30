@@ -18,14 +18,16 @@ from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, DestroyM
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
 from rest_framework.decorators import api_view
-
+from rest_framework.permissions import IsAuthenticated
 
 
 # API Based views
 # Api views for Book details
-class APIBook(APIView):
+class APIBookView(APIView):
+    permission_classes = [IsAuthenticated]  # Set permission class for API view
     # Get method to retrive Book data by id or bulk
     def get(self, request, pk=None):
+        print(request.user)
         if pk:                                           # Check if primary key is given or not
             try:
                 book = Book.objects.get(pk=pk)               # Fetch Book object using primary key
@@ -74,7 +76,7 @@ class APIBook(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)  # No content response
 
 # API views for Author details
-class APIAuthor(APIView):
+class APIAuthorView(APIView):
     # Get method to retrieve Author data by id or all authors
     def get(self, request, pk=None):
         if pk:  # Check if primary key is given for a specific author
@@ -122,7 +124,7 @@ class APIAuthor(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)  # Return no content response after deletion
     
 # API views for Publisher details
-class APIPublisher(APIView):
+class APIPublisherView(APIView):
     # Get method to retrieve Publisher data by id or all publishers
     def get(self, request, pk=None):
         if pk:  # Check if primary key is given for a specific publisher
@@ -307,3 +309,5 @@ class BookListView(ListView):
 # Https status code
 # Html template tags
 # GenericAPIView  -> Pagination
+# Curl, jwt, classmethod
+# Hw : viewset
