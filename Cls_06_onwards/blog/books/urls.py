@@ -2,7 +2,7 @@
 from django.shortcuts import render
 from django.urls import path
 # Importing views from books app
-from books.views import (APIAuthorView, APIBookView, APIPublisherView, BookAddView,
+from books.views import (APIAuthorView, APIBookView, APIPublisherView, BookAddView, BookListAPIView,
                         BookListView, BookGetUpdateDelete, ContactFormView, MyView, PublisherHandler)
 
 
@@ -19,6 +19,7 @@ urlpatterns = [
     path('contact_success/', lambda request: render(request,'success/contact_success.html'), name='contact_success'),
     
     # Rest api urls
+    path('api/books/paged/', BookListAPIView.as_view(), name='api_books_paged'), # Book List using pagination
     path('api/books/', APIBookView.as_view(), name='api_books'), # Book List and Create
     path('api/books/<int:pk>/', APIBookView.as_view(), name='api_book'), # Book Retrieve, Update and Delete
     path('api/authors/', APIAuthorView.as_view(), name='api_authors'), # Author List and Create

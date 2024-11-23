@@ -16,7 +16,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework.response import Response
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 
@@ -299,7 +299,10 @@ class BookListView(ListView):
     # context to use the objects of Book model in template
     context_object_name = 'books'    
     
-
+# API view to show all book details using ListAPIView for pagination
+class BookListAPIView(ListAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
 
 
 
